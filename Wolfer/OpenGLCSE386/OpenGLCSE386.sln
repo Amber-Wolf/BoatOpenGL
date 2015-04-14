@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLCSE386", "OpenGLCSE386\OpenGLCSE386.vcxproj", "{56771AA1-467B-4B70-9341-E04C10BACEDD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wolfercmLab6", "bachmaerLab6\bachmaerLab6.vcxproj", "{C11EEEFF-018E-4E9C-B898-14B3B9285B41}"
+	ProjectSection(ProjectDependencies) = postProject
+		{56771AA1-467B-4B70-9341-E04C10BACEDD} = {56771AA1-467B-4B70-9341-E04C10BACEDD}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wolfercmLab7", "wolfercmLab7\wolfercmLab7.vcxproj", "{22D0D9AA-84D6-4CEB-A5B6-891594027AE6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{56771AA1-467B-4B70-9341-E04C10BACEDD} = {56771AA1-467B-4B70-9341-E04C10BACEDD}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "projectOfDoom", "projectOfDoom\projectOfDoom.vcxproj", "{D3FFFDB8-B240-4CAA-9C51-F34D6948D28A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{56771AA1-467B-4B70-9341-E04C10BACEDD} = {56771AA1-467B-4B70-9341-E04C10BACEDD}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56771AA1-467B-4B70-9341-E04C10BACEDD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{56771AA1-467B-4B70-9341-E04C10BACEDD}.Debug|Win32.Build.0 = Debug|Win32
+		{56771AA1-467B-4B70-9341-E04C10BACEDD}.Release|Win32.ActiveCfg = Release|Win32
+		{56771AA1-467B-4B70-9341-E04C10BACEDD}.Release|Win32.Build.0 = Release|Win32
+		{C11EEEFF-018E-4E9C-B898-14B3B9285B41}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C11EEEFF-018E-4E9C-B898-14B3B9285B41}.Debug|Win32.Build.0 = Debug|Win32
+		{C11EEEFF-018E-4E9C-B898-14B3B9285B41}.Release|Win32.ActiveCfg = Release|Win32
+		{C11EEEFF-018E-4E9C-B898-14B3B9285B41}.Release|Win32.Build.0 = Release|Win32
+		{22D0D9AA-84D6-4CEB-A5B6-891594027AE6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{22D0D9AA-84D6-4CEB-A5B6-891594027AE6}.Debug|Win32.Build.0 = Debug|Win32
+		{22D0D9AA-84D6-4CEB-A5B6-891594027AE6}.Release|Win32.ActiveCfg = Release|Win32
+		{22D0D9AA-84D6-4CEB-A5B6-891594027AE6}.Release|Win32.Build.0 = Release|Win32
+		{D3FFFDB8-B240-4CAA-9C51-F34D6948D28A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D3FFFDB8-B240-4CAA-9C51-F34D6948D28A}.Debug|Win32.Build.0 = Debug|Win32
+		{D3FFFDB8-B240-4CAA-9C51-F34D6948D28A}.Release|Win32.ActiveCfg = Release|Win32
+		{D3FFFDB8-B240-4CAA-9C51-F34D6948D28A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+EndGlobal

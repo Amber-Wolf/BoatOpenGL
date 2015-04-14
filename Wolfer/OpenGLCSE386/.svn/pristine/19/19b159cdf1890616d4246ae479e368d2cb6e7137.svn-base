@@ -1,0 +1,98 @@
+#include "DiamondInterleaved.h"
+
+#include "Diamond.h"
+
+#include <vector>
+
+void DiamondInterleaved::buildShaders()
+{
+	ShaderInfo shaders[] = {
+		{ GL_VERTEX_SHADER, "pVSpc.vert" },
+		{ GL_FRAGMENT_SHADER, "pFSc.frag"},
+		{ GL_NONE, NULL } // signals that there are no more shaders
+	};
+
+	// Read the files and create the OpenGL shader program.
+	ShaderProgram = LoadShaders(shaders);
+
+	// This program will stay in effect for all draw calls until it is 
+	// replaced with another or explicitly disabled (and the 
+	// fixed function pipeline is enabld) by calling glUseProgram with NULL
+    //glUseProgram(ShaderProgram);
+
+}
+
+struct VertexData
+{
+    vec3 m_pos;
+    vec4 m_color;
+
+    VertexData() {}
+
+    VertexData(vec3 pos, vec4 col)
+    {
+        m_pos    = pos;
+        m_color  = col;
+
+    }
+};
+
+
+void DiamondInterleaved::initialize()
+{
+	buildShaders();
+
+	GLuint VBO, IBO;
+
+	glGenVertexArrays (1, &vertexArrayObject); 
+	glBindVertexArray( vertexArrayObject );
+
+	vec3 v0 = vec3( 0.0f,  0.75f, 0.0f);
+	vec3 v1 = vec3( -0.25f,  0.0f, 0.0f);
+	vec3 v2 = vec3( 0.25f,  0.0f, 0.0f);
+	vec3 v3 = vec3( 0.0f,  -0.75f, 0.0f);
+
+	vec4 c0 = vec4(0.0f, 1.0f, 1.0f, 1.0f); 
+	vec4 c1 = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	vec4 c2 = vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	vec4 c3 = vec4(0.0f, 0.0f, 1.0f, 1.0f);
+
+	vector<VertexData> v;
+	v.push_back( VertexData( v0, c0 ) );
+	v.push_back( VertexData( v1, c1 ) );
+	v.push_back( VertexData( v2, c2 ) );
+	v.push_back( VertexData( v3, c3 ) );
+	
+ 	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, v.size() * sizeof(VertexData), &v[0], GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), 0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(VertexData), (const GLvoid*)sizeof(vec3));
+	glEnableVertexAttribArray(2);
+
+	vector<GLuint> indices;
+
+	indices.push_back(0);
+	indices.push_back(1);
+	indices.push_back(2);
+	indices.push_back(3);
+	indices.push_back(2);
+	indices.push_back(1);
+
+	glGenBuffers(1, &IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
+
+} // end initialize
+ 
+void DiamondInterleaved::draw()
+{
+	glUseProgram(ShaderProgram);
+	glBindVertexArray(vertexArrayObject);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+   
+} // end draw
+

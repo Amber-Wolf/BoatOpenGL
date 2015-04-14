@@ -1,0 +1,27 @@
+#include "VisualObject.h"
+
+using namespace std;
+
+
+////---------------------------------------------------------------------
+//// Method: VisualObject class constructor
+//// Author: Eric Bachmann
+//// Function: Initializes object position and orientation.
+//// Parameters: none
+//// Returns: none
+//// Called By: na
+//// Calls: none
+////---------------------------------------------------------------------
+//VisualObject::VisualObject( OpenGLApplicationBase * OpenGLApp )
+//{
+//	this->OpenGLAPP = OpenGLAPP;
+//
+//} // end VisualObject
+
+
+
+
+
+
+
+

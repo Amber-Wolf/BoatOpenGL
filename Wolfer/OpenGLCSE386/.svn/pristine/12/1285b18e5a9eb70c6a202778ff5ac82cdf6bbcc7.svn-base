@@ -1,0 +1,21 @@
+#ifndef ___VERTEX_STRUCTS_H___
+#define ___VERTEX_STRUCTS_H___
+
+struct VertexData
+{
+    vec3 m_pos;
+    vec4 m_color;
+
+    VertexData() {}
+
+    VertexData(vec3 pos, vec4 col)
+    {
+        m_pos    = pos;
+        m_color  = col;
+
+    }
+};
+
+
+
+#endif /* ___VERTEX_STRUCTS_H___ */

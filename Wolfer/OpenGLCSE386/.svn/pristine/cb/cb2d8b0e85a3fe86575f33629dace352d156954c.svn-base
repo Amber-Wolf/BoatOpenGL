@@ -1,0 +1,16 @@
+#pragma once
+#include "controller.h"
+class Spinner :
+	public Controller
+{
+public:
+	Spinner(vec3 pos = vec3(0.0f, 0.0f, 0.0f), vec3 ax = vec3(1.0, 0.0f, 0.0f), GLfloat r = 10.0f);
+	~Spinner(void);
+	virtual void update(float elapsedTimeSeconds);
+
+protected:
+	vec3 position;
+	vec3 axis;
+	GLfloat rate;
+};
+

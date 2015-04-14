@@ -1,0 +1,79 @@
+#ifndef ___VISUAL_OBJECT_H___
+#define ___VISUAL_OBJECT_H___
+
+#include <math.h>
+#include <iostream>
+
+using namespace std;
+
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+#include <map>
+#include <vector>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/swizzle.hpp>
+#include <glm/gtc/constants.hpp>
+
+using namespace glm;
+
+#include "LoadShaders.h"
+#include "OpenGLApplicationBase.h"
+#include "Controller.h"
+
+class VisualObject 
+{
+public: 
+
+	friend class Controller;
+
+	// Constructors
+	VisualObject();
+
+	VisualObject(OpenGLApplicationBase * OpenGLApp);
+
+	virtual void initialize(){};
+
+	// Render the object and all of its children
+	virtual void draw();
+
+	// Update the object and all of its children
+	virtual void update(float elapsedTimeSeconds);
+
+	virtual void addController(Controller * controller );
+
+	virtual int addChild( VisualObject * child );
+
+	virtual VisualObject* removeChild( int objectSerialNumber );
+
+	virtual bool detachFromParent( );
+
+	mat4 modelMatrix;
+
+	Controller* controller;
+protected:
+
+	GLuint vertexArrayObject; // holds various data related to a collection of data
+
+	OpenGLApplicationBase* OpenGLAPP;
+
+	// Maintains a count of all VisualObject instantiated
+	static int objectCounter;
+
+	// Unique ID for a VisualObject instance
+	const int objectSerialNumber;
+
+	VisualObject* parent;
+
+	// Map containing all children of this node
+	//map<int, VisualObject> children;
+	vector<VisualObject*> children;
+
+}; // end VisualObject class
+
+
+#endif /* ___VISUAL_OBJECT_H___ */
+
+

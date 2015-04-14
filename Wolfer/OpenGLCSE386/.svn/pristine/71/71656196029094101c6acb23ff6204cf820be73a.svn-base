@@ -1,0 +1,25 @@
+#pragma once
+
+#include "VisualObject.h"
+
+class Diamond : public VisualObject
+{
+public:
+	public:
+
+		void buildShaders();
+
+		Diamond(){};
+
+		virtual void initialize();
+
+		virtual void draw();
+
+	protected:
+
+		GLuint ShaderProgram;
+
+		GLuint gWorldLocation;
+
+};
+

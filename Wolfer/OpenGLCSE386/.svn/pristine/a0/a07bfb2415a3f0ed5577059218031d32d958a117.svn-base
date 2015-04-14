@@ -1,0 +1,18 @@
+#pragma once
+
+#include "VisualObject.h"
+
+class Controller
+{
+public:
+
+	friend class VisualObject;
+
+	virtual void update(float elapsedTimeSeconds);
+
+protected:
+
+	VisualObject* target;
+
+};
+

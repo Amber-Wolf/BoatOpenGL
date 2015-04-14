@@ -1,0 +1,145 @@
+#include "ColoredPyramid.h"
+
+#include <vector>
+
+ColoredPyramid::ColoredPyramid(OpenGLApplicationBase * OpenGLApp)
+	:VisualObject( OpenGLApp )
+{
+
+}
+
+void ColoredPyramid::buildShaders()
+{
+	ShaderInfo shaders[] = {
+		{ GL_VERTEX_SHADER, "pVS.vert" },
+		{ GL_FRAGMENT_SHADER, "pFS.frag"},
+		{ GL_NONE, NULL } // signals that there are no more shaders
+	};
+
+	// Read the files and create the OpenGL shader program.
+	ShaderProgram = LoadShaders(shaders);
+
+	// This program will stay in effect for all draw calls until it is 
+	// replaced with another or explicitly disabled (and the 
+	// fixed function pipeline is enabld) by calling glUseProgram with NULL
+    glUseProgram(ShaderProgram);
+
+}
+
+struct VertexData
+{
+    vec3 m_pos;
+    vec4 m_color;
+
+    VertexData() {}
+
+    VertexData(vec3 pos, vec4 col)
+    {
+        m_pos    = pos;
+        m_color  = col;
+
+    }
+};
+
+
+// Construct visual object display list.
+void ColoredPyramid::initialize()
+{
+	buildShaders();
+
+	glUseProgram(ShaderProgram);
+
+	//gWorldLocation = glGetUniformLocation(ShaderProgram, "gWorld");
+ //   assert(gWorldLocation != 0xFFFFFFFF);
+
+	GLuint VBO, IBO;
+
+	glGenVertexArrays (1, &vertexArrayObject); 
+	glBindVertexArray( vertexArrayObject );
+
+	vector<VertexData> v;
+
+    v.push_back( VertexData( vec3( 0.0f,  1.0f, 0.0f), vec4( 1.0f, 0.0f, 0.0f, 1.0f )));
+    v.push_back( VertexData( vec3(-1.0f, -1.0f, 1.0f), vec4( 0.0f, 1.0f, 0.0f, 1.0f )));
+    v.push_back( VertexData( vec3( 1.0f, -1.0f, 1.0f), vec4( 0.0f, 0.0f, 1.0f, 1.0f )));
+    v.push_back( VertexData( vec3( 1.0f, -1.0f, -1.0f), vec4( 1.0f, 1.0f, 0.0f, 1.0f )));
+    v.push_back( VertexData( vec3(-1.0f, -1.0f, -1.0f), vec4( 0.0f, 1.0f, 1.0f, 1.0f )));
+
+ 	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, v.size() * sizeof(VertexData), &v[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), 0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(VertexData),(const GLvoid*)sizeof(vec3));
+	glEnableVertexAttribArray(2);
+
+	vector<unsigned int> i;
+	i.push_back(0);
+	i.push_back(1);
+	i.push_back(2);
+
+	i.push_back(0);
+	i.push_back(2);
+	i.push_back(3);
+
+	i.push_back(0);
+	i.push_back(3);
+	i.push_back(4);
+
+	i.push_back(0);
+	i.push_back(4);
+	i.push_back(1);
+
+	i.push_back(4);
+	i.push_back(2);
+	i.push_back(1);
+
+	i.push_back(4);
+	i.push_back(3);
+	i.push_back(2);
+
+	numberOfIndices = sizeof( i );
+
+    glGenBuffers(1, &IBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, i.size() * sizeof(unsigned int), &i[0], GL_STATIC_DRAW);
+
+} // end initialize
+
+
+
+// Preform drawing operations
+void ColoredPyramid::draw()
+{
+	glUseProgram(ShaderProgram);
+	glBindVertexArray(vertexArrayObject);
+    glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_INT, 0);
+
+} // end draw
+
+
+
+
+void ColoredPyramid::update(float elapsedTimeSeconds)
+{
+	mat4 Projection = OpenGLAPP->getProjectionMatrix();
+	mat4 View = OpenGLAPP->getViewMatrix();
+
+	glUseProgram(ShaderProgram);
+
+	//	glUniformMatrix4fv(gWorldLocation, 1, GL_FALSE, value_ptr(modelingTrans));
+
+	//static float translation = 0.0f;
+
+	//translation += elapsedTimeSeconds * 1.0f;
+
+	//static float rotation = 0.0;
+
+	//rotation += elapsedTimeSeconds * 45;
+
+	//scaleTransform = scale(mat4(1.0f), vec3( translation * 0.1, translation * 0.1, translation * 0.1));
+	//translateTransform = translate(mat4(1.0f), vec3( 0.0f, 0.0f,-10 ));
+	//rotateTransform = rotate(mat4(1.0f), fmod(rotation, 360.0f), vec3(1.0, 1.0, 1.0));
+
+}

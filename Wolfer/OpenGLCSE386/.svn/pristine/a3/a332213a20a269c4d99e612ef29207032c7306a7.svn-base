@@ -1,0 +1,262 @@
+//#include <math.h>
+//#define GLM_MESSAGES
+//#define GLM_FORCE_RADIANS
+
+#define GLM_SWIZZLE
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/swizzle.hpp>
+
+using namespace glm;
+ 
+#include "OpenGLApplicationBase.h"
+
+#include "ColoredPyramid.h"
+#include "Floor.h"
+
+static GLint view = 0;
+
+class bachmaerLab3 : public OpenGLApplicationBase
+{
+public:
+
+	bachmaerLab3()
+	{
+		pyramid0 = new ColoredPyramid( this );
+		pyramid1 = new ColoredPyramid( this );
+		pyramid2 = new ColoredPyramid( this, 2.0f, 2.0f );
+		pyramid3 = new ColoredPyramid( this );
+		pyramid4 = new ColoredPyramid( this );
+		floor = new Floor(this);
+	};
+
+	~bachmaerLab3()
+	{
+		delete pyramid0;
+		delete pyramid1;
+		delete pyramid2;
+		delete pyramid3;
+		delete pyramid4;
+		delete floor;
+	};
+
+
+    virtual bool initialize()
+    {
+		glClearColor(0.5f, 0.5f, 1.0f, 0.0f);
+		glFrontFace(GL_CCW);
+		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+
+		glEnable( GL_DEPTH_TEST );
+
+		setUpMenus();
+
+		// Set the viewing transformation that will be used to render all objects 
+		// in the scene.
+		this->ViewMatrix = translate(mat4(1.0f), vec3( 0.0f, 0.0f,-12.0f ));
+
+		pyramid0->initialize();
+		pyramid0->modelMatrix = rotate(mat4(1.0f), 45.0f, vec3(0.0f, 1.0f, 0.0f)); 
+
+		pyramid1->initialize();
+		T1 = translate(mat4(1.0f), vec3(3.0f, 0.0, 0.0f));
+		pyramid1->modelMatrix = rotate(T1, 45.0f, vec3(1.0f, 0.0f, 0.0f));
+
+		pyramid2->initialize();
+		T2 = translate(mat4(1.0f), vec3(-3.0f, 0.0, 0.0f));
+		pyramid2->modelMatrix = rotate(T2, 45.0f, vec3(0.0f, 0.0f, 1.0f));
+
+		pyramid3->initialize();
+		T3 = translate(mat4(1.0f), vec3(10.0f, 0.0, 0.0f));
+		R30 = rotate(mat4(1.0f), 65.0f, vec3(0.0f, 1.0f, 0.0f));
+		pyramid3->modelMatrix = R30 * T3;
+
+		pyramid4->initialize();
+		P4 = vec3( 3.5f, -2.5f, 3.5f );
+		pyramid4->modelMatrix = translate(mat4(1.0f), P4);
+	
+		floor->initialize();
+		floor->modelMatrix = translate(mat4(1.0f), vec3( 0.0f, -3.0f, 0.0f ));// * rotate(mat4(1.0f), 90.0f, vec3(1.0f, 0.0f, 0.0f));
+
+		return true;
+
+    } // end initialize
+
+	// Render scene objects
+	virtual void drawScene()
+	{ 
+		pyramid0->draw();
+		pyramid1->draw();
+		pyramid2->draw();
+		pyramid3->draw();
+		pyramid4->draw();
+		floor->draw();
+
+	} // end drawScene
+
+
+
+
+
+	// Update scene objects inbetween frames
+	virtual void updateScene( float elapsedTimeSec ) 
+	{
+		static float rotation = 0.0f;
+
+		rotation += elapsedTimeSec * 25.0f;
+
+		pyramid0->modelMatrix = rotate(mat4(1.0f), fmod(rotation, 360.0f), vec3(0.0f, 1.0f, 0.0f)); //mat4(1.0f);
+		pyramid0->update( elapsedTimeSec);
+
+		pyramid1->modelMatrix = rotate(T1, fmod(rotation, 360.0f), vec3(1.0f, 0.0f, 0.0f));
+		pyramid1->update( elapsedTimeSec);
+
+		pyramid2->modelMatrix = rotate(T2, fmod(rotation, 360.0f), vec3(0.0f, 0.0f, 1.0f));
+		pyramid2->update( elapsedTimeSec);
+
+		R30 = rotate(mat4(1.0f), fmod(rotation, 360.0f), vec3(0.0f, 1.0f, 0.0f));
+		R31 = rotate(mat4(1.0f), fmod(-rotation * 4.0f, 360.0f), vec3(1.0f, 0.0f, 0.0f));
+		pyramid3->modelMatrix = R30 * T3 * R31;
+		pyramid3->update( elapsedTimeSec);
+
+		static vec3 i = vec3(1.0f, 0.0f, 0.0); 
+		static vec3 k = vec3(0.0f, 0.0f, 1.0); 
+
+		static vec3 velocity = -k;
+		static int leg = 0;
+
+		switch (leg) {
+
+			case 0:
+
+				if (P4.z <= -3.5) {
+					P4.z = -3.5;
+					velocity = -i;
+					leg = 1;
+				}
+				break;
+			case 1:
+
+				if (P4.x <= -3.5) {
+					P4.x = -3.5;
+					velocity = k;
+					leg = 2;
+				}
+			case 2:
+
+				if (P4.z >= 3.5) {
+					P4.z = 3.5;
+					velocity = i;
+					leg = 3;
+				}
+			case 3:
+
+				if (P4.x >= 3.5) {
+					P4.x = 3.5;
+					velocity = -k;
+					leg = 0;
+				}
+
+			default:
+
+				break;
+
+		}
+		
+		P4 = P4 + velocity * elapsedTimeSec;
+		pyramid4->modelMatrix = translate(mat4(1.0f), P4);
+		pyramid4->update( elapsedTimeSec);
+		
+		floor->update(elapsedTimeSec);
+	} 
+
+	friend void viewMenu(int value);
+
+	GLuint createViewMenu() 
+	{
+		// Create polygon submenu
+		GLuint menuId = glutCreateMenu(viewMenu);
+		// Specify menu items and their integer indentifiers
+		glutAddMenuEntry("default", 0);
+		glutAddMenuEntry("View 1", 1);
+		glutAddMenuEntry("View 2", 2);
+		glutAddMenuEntry("View 3", 2);
+		glutAddMenuEntry("View 4", 2);
+		glutAddMenuEntry("View 5", 2);
+		glutAddMenuEntry("View 6", 2);
+		return menuId;
+
+	} // end createFigureMenu
+
+	
+	friend void mainMenu(int value);
+
+	void setUpMenus()
+	{	
+		GLuint menu1id = createViewMenu();
+		GLuint menu2id = createPolygonMenu();
+		GLuint menu3id = createFrontFaceMenu();
+		GLuint menu4id = createPointSizeMenu();
+		GLuint menu5id = createAntialiasingMenu();
+
+		// Create main menu
+		topMenu = glutCreateMenu(mainMenu);
+		glutAddSubMenu("View", menu1id); 
+		glutAddSubMenu("Polygon Mode", menu2id); 
+		glutAddSubMenu("Rendered Polygon Face ", menu3id);
+		glutAddSubMenu("Point Size ", menu4id);
+		glutAddSubMenu("Antialiasing ", menu5id);
+		glutAddMenuEntry("Quit", 1); // Specify indentifier for "Quit"			  
+		glutAttachMenu(GLUT_RIGHT_BUTTON); // Attach menu to right mouse button
+
+	} //end setUpMenus
+
+	ColoredPyramid * pyramid0, * pyramid1, *pyramid2, *pyramid3, *pyramid4;
+	mat4 T1, T2, T3, R30, R31, T4; 
+	vec3 P4;
+	Floor* floor;
+
+}; // end bachmaerLab3
+
+
+void viewMenu(int value)
+{
+	view = value;
+	cout << "View " << value << endl;
+
+} // end figureMenu
+
+
+void mainMenu(int value)
+{
+	switch (value) {
+
+		case(1):
+			glutLeaveMainLoop(); // End the program
+			break;
+		default:
+			cout << "Unknown Main Menu Selection!" << endl;
+	}
+
+} // end mainMenu
+
+
+
+int main(int argc, char** argv)
+{
+    GLUTBaseInit(argc, argv);
+
+	GLUTBaseCreateWindow( "CSE 386 Lab3" );
+
+    bachmaerLab3 pApp;
+	
+	pApp.initialize();
+
+	GLUTBaseRunApplication(&pApp);
+
+    return 0;
+
+} // end main
