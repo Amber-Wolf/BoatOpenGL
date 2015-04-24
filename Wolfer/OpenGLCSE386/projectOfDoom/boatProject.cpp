@@ -37,11 +37,11 @@ const int INIT_SHIP = 3;   //The initial number of ships.
 *  Runs a program where you shoot enemy ships via the spacebar and arrow keys.
 */
 
-class projectOfDoom : public OpenGLApplicationBase
+class boatProject : public OpenGLApplicationBase
 {
 public:
 
-	projectOfDoom()
+	boatProject()
 	{
 		cannon = new Cylinder( this,1.0f,0.25f, vec4(0.7f,0.2f,0.2f,0.9f) );
 		floor = new Floor(this, 100.0f);
@@ -54,7 +54,7 @@ public:
 		printToScreen = false;
 	};
 
-	~projectOfDoom()
+	~boatProject()
 	{
 		delete cannon;
 		delete floor;
