@@ -286,7 +286,7 @@ public:
 	int sunkCount;
 	bool printToScreen;
 
-}; // end bachmaerLab6
+}; 
 
 
 void mainMenu(int value)
