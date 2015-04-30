@@ -1,9 +1,0 @@
-#include "Controller.h"
-
-
-// Sample update method for demonstration purposes.
-void Controller::update(float elapsedTimeSeconds)
-{
-	cout << "controller update" << endl;
-
-} // end update
